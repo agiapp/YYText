@@ -200,7 +200,9 @@ static dispatch_queue_t YYTextAsyncLayerGetReleaseQueue() {
     } else {
         [_sentinel increase];
         if (task.willDisplay) task.willDisplay(self);
-        UIGraphicsBeginImageContextWithOptions(self.bounds.size, self.opaque, self.contentsScale);
+        CGSize size = CGSizeMake(MAX(self.bounds.size.width, 0.0001), MAX(self.bounds.size.height, 0.0001));
+        // 在iOS17后（Xcode15+编译），传入的size为0，下面方法会出现崩溃
+        UIGraphicsBeginImageContextWithOptions(size, self.opaque, self.contentsScale);
         CGContextRef context = UIGraphicsGetCurrentContext();
         if (self.opaque && context) {
             CGSize size = self.bounds.size;
